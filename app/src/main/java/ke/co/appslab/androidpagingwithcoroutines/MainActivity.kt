@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -13,46 +15,42 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ke.co.appslab.androidpagingwithcoroutines.adapters.RedditPostsAdapter
 import ke.co.appslab.androidpagingwithcoroutines.models.RedditPost
 import ke.co.appslab.androidpagingwithcoroutines.repositories.PostsDataSource
+import ke.co.appslab.androidpagingwithcoroutines.utils.nonNull
+import ke.co.appslab.androidpagingwithcoroutines.utils.observe
+import ke.co.appslab.androidpagingwithcoroutines.viewmodels.MainViewModel
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
     private val redditPostsAdapter = RedditPostsAdapter()
+    lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-       initializeList()
+        //initialize the view model
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        observeLiveData()
+        initializeList()
+
+    }
+
+    private fun observeLiveData() {
+        //observe live data emitted by view model
+        mainViewModel.getPosts().observe(this, Observer {
+            redditPostsAdapter.submitList(it)
+        })
     }
 
     private fun initializeList() {
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = redditPostsAdapter
-
-        val config = PagedList.Config.Builder()
-            .setPageSize(30)
-            .setEnablePlaceholders(false)
-            .build()
-
-        val liveData = initializedPagedListBuilder(config).build()
-
-        liveData.observe(this, Observer<PagedList<RedditPost>> { pagedList ->
-            redditPostsAdapter.submitList(pagedList)
-        })
     }
-    private fun initializedPagedListBuilder(config: PagedList.Config):
-            LivePagedListBuilder<String, RedditPost> {
 
-        val dataSourceFactory = object : DataSource.Factory<String, RedditPost>() {
-            override fun create(): DataSource<String, RedditPost> {
-                return PostsDataSource()
-            }
-        }
-        return LivePagedListBuilder<String, RedditPost>(dataSourceFactory, config)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
