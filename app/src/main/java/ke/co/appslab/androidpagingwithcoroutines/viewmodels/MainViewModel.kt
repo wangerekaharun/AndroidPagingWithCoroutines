@@ -2,12 +2,12 @@ package ke.co.appslab.androidpagingwithcoroutines.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import ke.co.appslab.androidpagingwithcoroutines.models.RedditPost
 import ke.co.appslab.androidpagingwithcoroutines.repositories.PostsDataSource
+import kotlinx.coroutines.Dispatchers
 
 class MainViewModel : ViewModel() {
     var postsLiveData  :LiveData<PagedList<RedditPost>>
@@ -27,7 +27,7 @@ class MainViewModel : ViewModel() {
 
         val dataSourceFactory = object : DataSource.Factory<String, RedditPost>() {
             override fun create(): DataSource<String, RedditPost> {
-                return PostsDataSource(viewModelScope)
+                return PostsDataSource(Dispatchers.IO)
             }
         }
         return LivePagedListBuilder<String, RedditPost>(dataSourceFactory, config)

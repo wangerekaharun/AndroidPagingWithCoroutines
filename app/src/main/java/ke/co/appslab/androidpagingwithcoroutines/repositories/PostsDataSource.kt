@@ -6,12 +6,16 @@ import ke.co.appslab.androidpagingwithcoroutines.models.RedditPost
 import ke.co.appslab.androidpagingwithcoroutines.networking.ApiClient
 import ke.co.appslab.androidpagingwithcoroutines.networking.ApiService
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class PostsDataSource(private val scope: CoroutineScope) :
+class PostsDataSource(coroutineContext: CoroutineContext) :
     PageKeyedDataSource<String, RedditPost>() {
     private val apiService = ApiClient.getClient().create(ApiService::class.java)
+
+    private val job = Job()
+    private val scope = CoroutineScope(coroutineContext + job)
 
     override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, RedditPost>) {
         scope.launch {
@@ -75,7 +79,7 @@ class PostsDataSource(private val scope: CoroutineScope) :
 
     override fun invalidate() {
         super.invalidate()
-        scope.cancel()
+        job.cancel()
     }
 
 }
