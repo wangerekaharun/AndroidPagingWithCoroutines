@@ -1,6 +1,5 @@
 package ke.co.appslab.androidpagingwithcoroutines.networking
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import ke.co.appslab.androidpagingwithcoroutines.networking.ApiEndPoints.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -29,7 +28,6 @@ class ApiClient {
                 null -> retrofit = Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .client(okHttpClient)
                     .build()
             }
