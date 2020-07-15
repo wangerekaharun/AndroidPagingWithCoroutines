@@ -33,4 +33,5 @@ class PostsPagingSource :
         }
     }
 
+    override val keyReuseSupported: Boolean = true
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import ke.co.appslab.androidpagingwithcoroutines.adapters.RedditLoadPostsAdapter
 import ke.co.appslab.androidpagingwithcoroutines.adapters.RedditPostsAdapter
 import ke.co.appslab.androidpagingwithcoroutines.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,10 +29,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-
-        observeLiveData()
         initializeList()
-
+        observeLiveData()
     }
 
     private fun observeLiveData() {
@@ -42,21 +41,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch {
-            redditPostsAdapter.loadStateFlow.collectLatest { loadStates ->
-                when (loadStates.refresh) {
-                    is LoadState.Error -> {
-                        Toast.makeText(applicationContext, "error", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-
     }
 
     private fun initializeList() {
         list.layoutManager = LinearLayoutManager(this)
         list.adapter = redditPostsAdapter
+        redditPostsAdapter.withLoadStateHeaderAndFooter(
+            header = RedditLoadPostsAdapter(redditPostsAdapter::retry),
+            footer = RedditLoadPostsAdapter(redditPostsAdapter::retry)
+        )
+
     }
 
 

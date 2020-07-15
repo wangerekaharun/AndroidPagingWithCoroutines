@@ -9,7 +9,7 @@ interface ApiService {
 
     @GET("/r/aww/hot.json")
     suspend fun fetchPosts(
-        @Query("limit") loadSize: Int = 30,
+        @Query("limit") loadSize: Int = 0,
         @Query("after") after: String? = null,
         @Query("before") before: String? = null
     ): Response<RedditApiResponse>
