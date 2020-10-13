@@ -7,4 +7,4 @@ This project uses a version of the Paging Library which is below v3.0. Paging 3.
 The master branch has implementation of Paging With Coroutines using a version of the paging library which is below v3.0. I have added a new branch, [paging-3.0](https://github.com/wangerekaharun/AndroidPagingWithCoroutines/tree/paging-3.0) with all the additions from Paging 3.0
 
 
-The detailed explanation for the implementation on the master branch can be found in the  of can be found in the [Android Paging Library with Kotlin Coroutines](https://medium.com/@harunwangereka/android-paging-library-with-kotlin-coroutines-b96602e3fae3) article
+The detailed explanation for the implementation on the master branch can be found in the [Android Paging Library with Kotlin Coroutines](https://medium.com/@harunwangereka/android-paging-library-with-kotlin-coroutines-b96602e3fae3) article
